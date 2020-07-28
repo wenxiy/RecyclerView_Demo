@@ -1,6 +1,7 @@
 package com.example.recyclerview_demo;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,7 +22,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.InnerHolder> {
     @NonNull
     @Override
     public ListAdapter.InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =View.inflate(parent.getContext(),R.layout.item_list,null);
+        LayoutInflater layoutInflater= LayoutInflater.from(parent.getContext());
+        View view=layoutInflater.inflate(R.layout.item_list,parent,false);
         return new InnerHolder(view);
     }
 

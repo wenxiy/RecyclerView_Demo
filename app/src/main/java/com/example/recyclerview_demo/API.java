@@ -10,5 +10,5 @@ import retrofit2.http.GET;
 
 public interface API {
     @GET("/developers")
-    Call<Developer> getDevelopers();
+    Call<List<Developer>> getDevelopers();
 }

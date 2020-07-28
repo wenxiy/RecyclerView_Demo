@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        recyclerView = findViewById(R.id.recyclerview);
         response();
-        initdata();
     }
 
     private void response() {
@@ -32,20 +32,18 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        API api = retrofit.create(API.class);
-        Call<Developer> task = api.getDevelopers();
-       task.enqueue(new Callback<Developer>() {
+        API api = retrofit.create(API.class);Call<List<Developer>> task = api.getDevelopers();
+       task.enqueue(new Callback<List<Developer>>() {
            @Override
-           public void onResponse(Call<Developer> call, Response<Developer> response) {
+           public void onResponse(Call<List<Developer>> call, Response<List<Developer>> response) {
                int code = response.code();
+               developerdatas = new ArrayList<>();
                if (code == HttpsURLConnection.HTTP_OK) {
-                   for (int i = 0; i < 6; i++) {
-                       Developer developers = new Developer();
-                       developers.setAvatar(response.body().getAvatar());
-                       developers.setName(response.body().getName());
-                       developers.setUsername(response.body().getUsername());
-                       developerdatas.add(developers);
-                   }
+                   developerdatas = response.body();
+                   LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                   recyclerView.setLayoutManager(linearLayoutManager);
+                   ListAdapter listAdapter = new ListAdapter(developerdatas);
+                   recyclerView.setAdapter(listAdapter);
                    Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_SHORT).show();
                }
                if (code == HttpsURLConnection.HTTP_NOT_FOUND) {
@@ -54,19 +52,10 @@ public class MainActivity extends AppCompatActivity {
            }
 
            @Override
-           public void onFailure(Call<Developer> call, Throwable t) {
+           public void onFailure(Call<List<Developer>> call, Throwable t) {
                Toast.makeText(MainActivity.this, "失败", Toast.LENGTH_SHORT).show();
            }
        });
     }
 
-    private void initdata() {
-        developerdatas = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        ListAdapter listAdapter = new ListAdapter(developerdatas);
-        recyclerView.setAdapter(listAdapter);
-        listAdapter.notifyDataSetChanged();
-    }
 }
