@@ -14,7 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 class ListAdapter extends RecyclerView.Adapter<ListAdapter.InnerHolder> {
-    private final List<Developer> mdevelopers;
+    private  List<Developer> mdevelopers;
     public ListAdapter(List<Developer> developers) {
         mdevelopers = developers;
     }
