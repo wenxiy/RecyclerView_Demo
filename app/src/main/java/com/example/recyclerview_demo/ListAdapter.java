@@ -1,6 +1,7 @@
 package com.example.recyclerview_demo;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.InnerHolder> {
         }
 
         public void setdata(Developer developer) {
-            maver.setImageURI(developer.getAvatar());
+            Uri uri = Uri.parse(developer.getAvatar());
+            maver.setImageURI(uri);
             mitem_t1.setText(developer.getName());
             mitem_t2.setText(developer.getUsername());
         }
