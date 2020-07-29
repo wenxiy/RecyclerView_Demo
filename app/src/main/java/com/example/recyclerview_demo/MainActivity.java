@@ -1,5 +1,6 @@
 package com.example.recyclerview_demo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,6 +8,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.scwang.smart.refresh.header.ClassicsHeader;
+import com.scwang.smart.refresh.header.MaterialHeader;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +26,35 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     private List<Developer> developerdatas;
     private RecyclerView recyclerView;
-
+    private RefreshLayout refreshLayout;
     private static final String baseUrl ="https://ghapi.huchen.dev/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Fresco.initialize(this);
-        recyclerView = findViewById(R.id.recyclerview);
+        init();
         response();
+    }
+
+    private void init() {
+        recyclerView = findViewById(R.id.recyclerview);
+        refreshLayout = findViewById(R.id.refreshLayout);
+        refreshLayout.setRefreshHeader(new MaterialHeader(this));
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                Toast.makeText(MainActivity.this, "success to refresh", Toast.LENGTH_SHORT).show();
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                Toast.makeText(MainActivity.this, "fail to refresh", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void response() {
